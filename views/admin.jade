@@ -1,0 +1,103 @@
+extends layout
+
+block content
+    h1= title
+    p Welcome to Admin mode
+    - if(mode === true){
+        p ยินดีต้อนรับคุณ #{user} 
+        p คุณสามารถแก้ไข หรือ เพิ้มข้อมูลการแข่งขันได้
+        p
+        - if(allteam.length > 0){
+            table(class="table-comp")
+                tr
+                    th
+                        |Home Team
+                    th
+                        | 
+                    th
+                        |Away Team
+                    th
+                        |Describe
+                    th
+                        |date start
+                    th
+                        | 
+        
+                - for (var i = 0; i < allteam.length ; i+=1) {
+                    tr
+                        td
+                            a=allteam[i].Hometeam
+                        td
+                            | VS 
+                        td
+                            a=allteam[i].Awayteam
+                        td
+                            a=allteam[i].t_start
+                        td
+                            a=allteam[i].date_start
+                        td
+                            - if(autosend.indexOf(allteam[i].id_match_comp) != -1){
+                                input(input type="checkbox", class='checkboxs', checked ,_id=allteam[i].id_match_comp)
+                            - }else{
+                                input(input type="checkbox", class='checkboxs', _id=allteam[i].id_match_comp)
+                            - }
+                            
+                - }
+        - }
+        p
+        - if(allteam.length > 0){
+            input(class="but-new" type="submit", id="submit",value="submit")
+        - }
+        input(class="but-new" type="submit", id="editMode",value="Admin")
+        //- input(class="but-new" type="submit", id="logout",value="sign out")
+        
+    - }else{
+        p โปรด login ก่อน
+        p
+        input(class="but-new" type="submit", id="login",value="sign in")
+    - }
+    
+    script.
+            var user = '#{user}'
+            var test = '#{autosend}'.split(",");
+            var ary = test
+            $(document).ready( function() {
+                $('.checkboxs').on('input', function(){
+                    var dir = $(this).attr('_id')
+                    if(this.checked){
+                        ary.push(dir)
+                    }else{
+                        var i = ary.indexOf(dir);
+                        if(i != -1){
+                            ary.splice(i, 1);
+                        }
+                    }
+                })
+                $('#login').click(function(e){
+                    e.preventDefault();
+                    window.location.href = '/login';
+                });
+                $('#editMode').click(function(e){
+                    e.preventDefault()
+                    window.location.href = '/admin/show';
+                });
+                //- $('#logout').click(function(e){
+                //-     e.preventDefault()
+                //-     window.location.href = '/users/logout';
+                //- });
+                $('#submit').click(function(e){
+                    e.preventDefault()
+                    $.ajax({
+                        type: "POST",
+                        url: "/admin/auto",
+                        data: {'match_id': ary , 'email': user},
+                        success: function( meg ){
+                            if(meg === 'success'){
+                            alert( "Data Update: success");
+                            window.location.href = '/';
+                            }
+                        }
+                    })
+                });
+            });
+

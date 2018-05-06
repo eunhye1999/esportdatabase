@@ -1,0 +1,66 @@
+extends layout
+
+block content
+    h1= title
+    p Welcome to #{title}
+    form
+        table
+            tr
+                td User 
+                td 
+                    input(type="text", name="user_name", id="user_name", placeholder="username")
+            tr
+                td Password 
+                td
+                    input(type="password", name="password", id="password")
+            tr
+                td Email
+                td  
+                    input(type="text", name="email", id="email", placeholder='test@gmail.com')
+        //- p User
+        //- input(type="text", name="user_name", id="user_name", placeholder="username")
+        //- p Password
+        //- input(type="password", name="password", id="password")
+        //- p Email
+        //- input(type="text", name="email", id="email", placeholder='test@gmail.com')
+        //- P
+        p
+        input(class="but-new" type="submit", id="back",value="back")
+        input(class="but-new" type="submit", id="add_account",value="submit")
+
+
+    script.
+        //- alert('test')
+        $(document).ready( function() {
+            //- alert('sssss')
+            $('#back').click(function(e){
+                e.preventDefault()
+                window.location.href = '/login';
+            });
+            $('#add_account').click(function(e){
+                e.preventDefault()
+                var user_name = $("#user_name").val()
+                var password = $("#password").val()
+                var email = $("#email").val()
+                if(user_name === '' || password === '' || email === ''  ){
+                    alert('Please fill out this field')
+                }
+                else{
+                    $.ajax({
+                    type: "POST",
+                    url: "./register",
+                    data: {'login_id': user_name , 'login_pass':password, 'login_email': email}
+                    }).done(function( meg ) {
+                        if(meg === 'success'){
+                            alert( "Data Saved: " + user_name);
+                            window.location.href = '/';
+                        }else{
+                            alert( "Error: ");
+                        }
+                    });
+                }
+            });
+        });
+
+
+

@@ -1,0 +1,57 @@
+extends layout
+
+block content
+
+    h1= title
+    p Welcome to #{title}
+    form
+        table
+            tr
+                td
+                    |Email  
+                td
+                    input(type="text", name="user_name", id="user_name", placeholder="email@gmail.com")
+            tr
+                td
+                    |Password  
+                td
+                    input(type="password", name="password", id="password")
+
+        p
+        input(class="but-new" type="submit", id="login",value="sign in")
+        input(class="but-new" type="submit", id="register",value="sign up")
+        input(class="but-new" type="submit", id="back",value="cancel")
+
+    script.
+        //- alert('test')
+        $(document).ready( function() {
+            $('#back').click(function(e){
+                e.preventDefault();
+                window.location.href = '/admin';
+            });
+            $('#register').click(function(e){
+                e.preventDefault()
+                window.location.href = '/login/register';
+            });
+            $('#login').click(function(e){
+                e.preventDefault()
+                var email = $("#user_name").val()
+                var password = $("#password").val()
+                $.ajax({
+                    type: "POST",
+                    url: "/users/login",
+                    data: {'login_email': email , 'login_pass':password}
+                }).done(function( meg ) {
+                    if(meg != 'Error'){
+                        alert('ยินดีต้อนรับคุณ : '+email);
+                        window.location.href = '/admin';
+                    }else{
+                        alert('ERROR');
+                    }
+                });
+            });
+        });
+
+
+
+

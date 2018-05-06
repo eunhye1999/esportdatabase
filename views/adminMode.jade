@@ -1,0 +1,62 @@
+extends layout
+
+block content
+    h1= title
+    p Welcome to Insert mode
+    form
+        table(class="table-comp")
+            tr
+                th
+                    |Home Team
+                th
+                    | 
+                th
+                    |Away Team
+                th
+                    |Describe
+                th
+                    |date start
+                th
+                    | 
+
+            - for (var i = 0; i < allteam.length ; i+=1) {
+                tr
+                    td
+                        a=allteam[i].Hometeam
+                    td
+                        | VS 
+                    td
+                        a=allteam[i].Awayteam
+                    td
+                        a=allteam[i].t_start
+                    td
+                        a=allteam[i].date_start
+                    td 
+                        a(href="./show/"+allteam[i].id_match_comp) edit
+            - }
+        //-     {
+        //- id_match_comp: 16,
+        //- id_homeTeam: 12,
+        //- Hometeam: 'Shanghai Dragons',
+        //- id_awayTeam: 2,
+        //- Awayteam: 'Los Angeles Valiant',
+        //- t_start: '10.00',
+        //- date_start: '25-4-2020' 
+        //- } 
+    p
+    p
+    input(type="submit", id="addMatch", value="Add",class="but-new")
+    input(type="submit", id="back", value="Back",class="but-new")
+
+    script.
+            $(document).ready( function() {
+                $("#back").click(function(e){
+                e.preventDefault()
+                    window.location.href = '/admin';
+                });
+                $("#addMatch").click(function(e){
+                    e.preventDefault()
+                    window.location.href = '/admin/add';
+                });
+            });
+

@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  .w3-row
+    .w3-col(style='width:10%').w3-container
+    .w3-col(style='width:80%').w3-container
+      table.w3-table-all
+        - each d in data
+          tr
+            td.w3-center 
+              p #{d.TEAM}
+            td.w3-center 
+              - if (typeof(d.HOME_SCORE) == 'undefined' && typeof(d.HOME_SCORE) == 'undefined')
+                p.w3-tag.w3-black #{d.TIME}
+              - else
+                p #{d.HOME_SCORE} - #{d.AWAY_SCORE}
+            td.w3-center 
+              p #{d.AWAY_TEAM}

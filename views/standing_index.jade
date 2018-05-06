@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  .w3-row
+    .w3-col(style='width:10%').w3-container
+    .w3-col(style='width:80%').w3-container
+      table.w3-table-all
+        tr
+          th.w3-center  team
+          th.w3-center  win
+          th.w3-center  lose
+          th.w3-center  win-lose-tie map
+          th.w3-center  diff
+        - each d in data
+          tr
+            td.w3-center 
+              p #{d.TEAM}
+            td.w3-center 
+              p #{d.WIN}
+            td.w3-center 
+              p #{d.LOSE}
+            td.w3-center 
+              p #{d.WIN_MAP}-#{d.LOSE_MAP}-#{d.TIE_MAP}
+            td.w3-center 
+              p #{d.DIFF}

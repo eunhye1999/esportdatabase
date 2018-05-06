@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    - each d in data
+      .w3-third.w3-padding-large
+          .w3-card
+            .w3-container
+              .w3-padding-64
+            .w3-container.w3-red
+              p #{d.TEAM}
+

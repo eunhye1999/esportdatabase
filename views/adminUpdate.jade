@@ -1,0 +1,143 @@
+extends layout
+
+block content
+    h1= title
+    p Welcome to Update mode
+    - var dnow = new Date
+    - var d = new Date(team.date_start);
+    - var month = parseInt(d.getMonth())+1
+    - var day = parseInt(d.getDate())
+    - var hr = parseInt(d.getHours())
+    - var min = parseInt(d.getMinutes())
+    - if(month < 10){
+    -   month = '0'+String(month)
+    - }
+    - if (day < 10){
+    -   day = '0'+String(day)
+    - }
+    - if (hr < 10){
+    -   hr = '0'+String(hr)
+    - }
+    - if (min < 10){
+    -   min = '0'+String(min)
+    - }
+    - var dateR = d.getFullYear()+'-'+month+'-'+day+'T'+hr+':'+min
+    form
+        table(class="table-comp")
+            tr
+                th
+                    |Home TEAM  
+                th
+                    | 
+                th
+                    |Away TEAM
+                th
+                    |Describe
+                th
+                    |date
+            tr
+                td
+                    a=team.Hometeam
+                td
+                    |VS
+                td
+                    a=team.Awayteam
+
+                - if(dnow >=  d){
+                    td
+                        input(type="text", name="time_satrt", id="time_satrt" , value=team.t_start, disabled)
+                    td
+                        input(type="datetime-local", name="date", id="date", value=dateR, disabled)
+                - }else{
+                    td
+                        input(type="text", name="time_satrt", id="time_satrt" , value=team.t_start)
+                    td
+                        input(type="datetime-local", name="date", id="date", value=dateR)
+                - }
+    p
+    form
+        table(class="table-comp")
+            tr
+                th
+                    |Round
+                th
+                    |Map 
+                th
+                    |Score Home Team
+                th 
+                    |VS
+                th
+                    |Score Away Team
+            
+            - for (var i = 0; i < map_comp.length ; i+=1) {
+                tr
+                    td
+                        a=i+1
+                    td
+                        a=map_comp[i].map_name
+                    - if(dnow <=  d){
+                        td
+                            input(type="text", id="homes"+(i+1), name="home_score" , value=map_comp[i].home_score ,disabled)
+                    - }else{
+                        td
+                            input(type="text", id="homes"+(i+1), name="home_score" , value=map_comp[i].home_score )
+                    - }
+                    //- input(type="text", id="homes"+(i+1), name="home_score" , value=map_comp[i].home_score ,disabled)
+                    td
+                        |VS
+
+                    - if(dnow <=  d){
+                        td
+                            input(type="text", id="aways"+(i+1), name="away_score" , value=map_comp[i].away_score ,disabled)
+                    - }else{
+                        td
+                            input(type="text", id="aways"+(i+1), name="away_score" , value=map_comp[i].away_score )
+                    - }
+                    //- input(type="text", id="aways"+(i+1), name="away_score" , value=map_comp[i].away_score ,disabled)
+            - }
+    
+    p
+    input(type="submit", id="back", value="Back",class="but-new")   
+    input(type="submit", id="delete", value="Delete",class="but-new")
+    input(type="submit", id="update", value="Update",class="but-new")
+
+    script.
+            var match_id = '#{team.id_match_comp}'
+            $(document).ready( function() {
+                $("#back").click(function(e){
+                    e.preventDefault()
+                    window.location.href = '/admin/show';
+                });
+                $("#delete").click(function(e){
+                    e.preventDefault()
+                    $.ajax({
+                        url: './'+match_id, 
+                        type: 'DELETE',
+                        success: function(result) {
+                            alert("Delete : success")
+                            window.location.href = '/admin/show';
+                    }   
+                    });
+                });
+                $("#update").click(function(e){
+                    e.preventDefault()
+                    var time_satrt = $("#time_satrt").val()
+                    var date = $("#date").val()
+                    var as = [$("#aways1").val(), $("#aways2").val(), $("#aways3").val(), $("#aways4").val()]
+                    var hs = [$("#homes1").val(), $("#homes2").val(), $("#homes3").val(), $("#homes4").val()]
+                    $.ajax({
+                        type: "POST",
+                        url: "./update",
+                        data: {
+                                'r1': hs[0],'r2': hs[1],'r3':hs[2], 'r4':hs[3],
+                                'r5': as[0],'r6': as[1],'r7':as[2], 'r8':as[3],
+                                'id':match_id, 't_start': time_satrt, 'date_start':date, 
+                            }
+                    }).done(function( meg ) {
+                        if(meg === 'success'){
+                            alert( "Data Update: success");
+                            window.location.href = '/admin/show';
+                        }
+                    });
+                });
+            });
